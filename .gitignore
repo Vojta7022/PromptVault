@@ -1,0 +1,21 @@
+# Environment
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+
+# Database
+promptvault.db
+
+# Node
+node_modules/
+frontend/dist/
+
+# macOS
+.DS_Store

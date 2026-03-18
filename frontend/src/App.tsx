@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { Prompt } from './types'
-import { getPrompts, createPrompt, updatePrompt, deletePrompt } from './api'
+import { getPrompts, createPrompt, updatePrompt, deletePrompt, duplicatePrompt } from './api'
 import Sidebar from './components/Sidebar'
 import EditorPanel from './components/EditorPanel'
 import RunPanel from './components/RunPanel'
@@ -56,6 +56,12 @@ export default function App() {
     setPrompts((prev) => prev.filter((p) => p.id !== id))
   }
 
+  const handleDuplicate = async (id: number) => {
+    const newPrompt = await duplicatePrompt(id)
+    setPrompts((prev) => [...prev, newPrompt])
+    handleSelect(newPrompt)
+  }
+
   return (
     <div className={styles.layout}>
       <Sidebar
@@ -64,6 +70,7 @@ export default function App() {
         onSelect={handleSelect}
         onCreate={handleCreate}
         onDelete={handleDelete}
+        onDuplicate={handleDuplicate}
       />
       <div className={styles.center}>
         <EditorPanel

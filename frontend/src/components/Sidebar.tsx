@@ -8,9 +8,17 @@ interface Props {
   onSelect: (p: Prompt) => void
   onCreate: (name: string) => void
   onDelete: (id: number) => void
+  onDuplicate: (id: number) => void
 }
 
-export default function Sidebar({ prompts, selectedId, onSelect, onCreate, onDelete }: Props) {
+export default function Sidebar({
+  prompts,
+  selectedId,
+  onSelect,
+  onCreate,
+  onDelete,
+  onDuplicate,
+}: Props) {
   const [creating, setCreating] = useState(false)
   const [newName, setNewName] = useState('')
 
@@ -81,16 +89,28 @@ export default function Sidebar({ prompts, selectedId, onSelect, onCreate, onDel
             onClick={() => onSelect(p)}
           >
             <span className={styles.itemName}>{p.name}</span>
-            <button
-              className={styles.deleteBtn}
-              title="Delete prompt"
-              onClick={(e) => {
-                e.stopPropagation()
-                if (confirm(`Delete "${p.name}"?`)) void onDelete(p.id)
-              }}
-            >
-              ×
-            </button>
+            <div className={styles.actions}>
+              <button
+                className={styles.actionBtn}
+                title="Duplicate prompt"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  void onDuplicate(p.id)
+                }}
+              >
+                ⎘
+              </button>
+              <button
+                className={`${styles.actionBtn} ${styles.deleteBtn}`}
+                title="Delete prompt"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (confirm(`Delete "${p.name}"?`)) void onDelete(p.id)
+                }}
+              >
+                ×
+              </button>
+            </div>
           </div>
         ))}
       </div>

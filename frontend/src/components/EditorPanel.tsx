@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react'
 import Editor, { type OnMount, type Monaco } from '@monaco-editor/react'
+import { getVersions, getRuns } from '../api'
 import styles from './EditorPanel.module.css'
 
 interface DeltaDecoration {
@@ -71,7 +72,6 @@ export default function EditorPanel({
       })
     }
 
-    // deltaDecorations returns the new decoration IDs
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     decoIdsRef.current = (editor as any).deltaDecorations(decoIdsRef.current, decorations)
   }, [])
@@ -104,6 +104,29 @@ export default function EditorPanel({
     [onChange, updateDecorations],
   )
 
+  const handleExport = async () => {
+    if (promptId === null || !editorRef.current) return
+    const currentContent = editorRef.current.getValue()
+    const [versions, runs] = await Promise.all([
+      getVersions(promptId).catch(() => []),
+      getRuns(promptId).catch(() => []),
+    ])
+    const payload = {
+      name: promptName,
+      content: currentContent,
+      exported_at: new Date().toISOString(),
+      versions,
+      runs,
+    }
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${promptName.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-export.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -111,9 +134,18 @@ export default function EditorPanel({
           {promptId !== null ? promptName || 'Untitled' : 'No prompt selected'}
         </span>
         {promptId !== null && (
-          <button className={styles.saveBtn} onClick={onSave} disabled={isSaving}>
-            {isSaving ? 'Saving…' : 'Save'}
-          </button>
+          <div className={styles.headerActions}>
+            <button
+              className={styles.exportBtn}
+              onClick={() => void handleExport()}
+              title="Export as JSON"
+            >
+              ↓ Export
+            </button>
+            <button className={styles.saveBtn} onClick={onSave} disabled={isSaving}>
+              {isSaving ? 'Saving…' : 'Save'}
+            </button>
+          </div>
         )}
       </div>
       <div className={styles.editorWrapper}>

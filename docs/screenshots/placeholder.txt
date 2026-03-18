@@ -1,0 +1,6 @@
+Screenshots will be added here once the app is running.
+
+Expected files:
+- editor.png    — Monaco editor with variable highlighting
+- run.png       — Run panel with variable inputs and output
+- diff.png      — Side-by-side version diff view

@@ -112,10 +112,9 @@
 .item {
   display: flex;
   align-items: center;
-  padding: 7px 12px;
+  padding: 7px 8px 7px 12px;
   cursor: pointer;
-  border-radius: 0;
-  gap: 6px;
+  gap: 4px;
   position: relative;
 }
 
@@ -140,24 +139,34 @@
   color: #cccccc;
 }
 
-.deleteBtn {
-  background: none;
-  border: none;
-  color: #888;
-  cursor: pointer;
-  font-size: 16px;
-  line-height: 1;
-  padding: 0 2px;
-  border-radius: 2px;
+.actions {
+  display: flex;
+  gap: 2px;
   opacity: 0;
   flex-shrink: 0;
 }
 
-.item:hover .deleteBtn {
+.item:hover .actions {
   opacity: 1;
+}
+
+.actionBtn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.actionBtn:hover {
+  color: #cccccc;
+  background: #3e3e42;
 }
 
 .deleteBtn:hover {
   color: #f48771;
-  background: rgba(244, 135, 113, 0.1);
+  background: rgba(244, 135, 113, 0.12);
 }

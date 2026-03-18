@@ -5,7 +5,7 @@ load_dotenv()
 import os
 from contextlib import asynccontextmanager
 
-from anthropic import Anthropic
+from openai import OpenAI
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -22,7 +22,10 @@ from schemas import (
     VersionResponse,
 )
 
-anthropic_client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+client = OpenAI(
+    api_key=os.environ["GROQ_API_KEY"],
+    base_url="https://api.groq.com/openai/v1"
+)
 
 
 @asynccontextmanager
@@ -155,6 +158,36 @@ def get_version(
 
 
 # ---------------------------------------------------------------------------
+# Runs — list & duplicate prompt
+# ---------------------------------------------------------------------------
+
+
+@app.get("/prompts/{prompt_id}/runs", response_model=list[RunResponse])
+def list_runs(prompt_id: int, db: Session = Depends(get_db)):
+    if db.get(Prompt, prompt_id) is None:
+        raise HTTPException(status_code=404, detail="Prompt not found")
+    return (
+        db.query(Run)
+        .filter(Run.prompt_id == prompt_id)
+        .order_by(Run.timestamp.desc())
+        .limit(50)
+        .all()
+    )
+
+
+@app.post("/prompts/{prompt_id}/duplicate", response_model=PromptResponse, status_code=201)
+def duplicate_prompt(prompt_id: int, db: Session = Depends(get_db)):
+    source = db.get(Prompt, prompt_id)
+    if source is None:
+        raise HTTPException(status_code=404, detail="Prompt not found")
+    new_prompt = Prompt(name=f"{source.name} (copy)", content=source.content)
+    db.add(new_prompt)
+    db.commit()
+    db.refresh(new_prompt)
+    return new_prompt
+
+
+# ---------------------------------------------------------------------------
 # Run
 # ---------------------------------------------------------------------------
 
@@ -184,17 +217,12 @@ def run_prompt(
     )
     version_id = latest_version.id if latest_version else None
 
-    # Call Anthropic and collect the full response via streaming
-    with anthropic_client.messages.stream(
+    # Call Gemini via OpenAI-compatible endpoint
+    response = client.chat.completions.create(
         model=body.model,
-        max_tokens=1024,
         messages=[{"role": "user", "content": filled}],
-    ) as stream:
-        message = stream.get_final_message()
-
-    output = next(
-        (block.text for block in message.content if block.type == "text"), ""
     )
+    output = response.choices[0].message.content or ""
 
     run = Run(
         prompt_id=prompt_id,

@@ -10,11 +10,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 12px 0 16px;
   height: 40px;
   background: #2d2d2d;
   border-bottom: 1px solid #3e3e42;
   flex-shrink: 0;
+  gap: 8px;
 }
 
 .title {
@@ -23,6 +24,29 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex: 1;
+}
+
+.headerActions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.exportBtn {
+  background: none;
+  color: #888;
+  border: 1px solid #3e3e42;
+  border-radius: 3px;
+  padding: 3px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.exportBtn:hover {
+  color: #cccccc;
+  border-color: #666;
+  background: #3e3e42;
 }
 
 .saveBtn {
@@ -33,7 +57,6 @@
   padding: 4px 14px;
   font-size: 12px;
   cursor: pointer;
-  flex-shrink: 0;
 }
 
 .saveBtn:hover:not(:disabled) {

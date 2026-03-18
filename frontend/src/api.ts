@@ -17,8 +17,14 @@ export const updatePrompt = (
 export const deletePrompt = (id: number): Promise<void> =>
   api.delete(`/prompts/${id}`).then(() => undefined)
 
+export const duplicatePrompt = (id: number): Promise<Prompt> =>
+  api.post<Prompt>(`/prompts/${id}/duplicate`).then((r) => r.data)
+
 export const getVersions = (id: number): Promise<Version[]> =>
   api.get<Version[]>(`/prompts/${id}/versions`).then((r) => r.data)
+
+export const getRuns = (id: number): Promise<RunResult[]> =>
+  api.get<RunResult[]>(`/prompts/${id}/runs`).then((r) => r.data)
 
 export const runPrompt = (
   id: number,
