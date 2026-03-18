@@ -1,0 +1,65 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  width: 92vw;
+  height: 85vh;
+  background: #1e1e1e;
+  border: 1px solid #3e3e42;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 44px;
+  background: #2d2d2d;
+  border-bottom: 1px solid #3e3e42;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 13px;
+  color: #cccccc;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  line-height: 1;
+}
+
+.closeBtn:hover {
+  color: #cccccc;
+  background: #3e3e42;
+}
+
+.diffWrapper {
+  flex: 1;
+  overflow: auto;
+  font-size: 13px;
+}
+
+/* Override diff viewer table to fill the space */
+.diffWrapper > div {
+  height: 100%;
+}
