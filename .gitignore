@@ -1,22 +1,37 @@
 # Environment
 .env
+.env.*
+**/__pycache__/
+.venv/
+venv/
 
 # Python
-__pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
-.venv/
-venv/
 
 # Database
 promptvault.db
 
 # Node
 node_modules/
+package-lock.json
+yarn.lock
 frontend/dist/
+
+# Build
+dist/
+build/
 
 # macOS
 .DS_Store
-CLAUDE.md
+Thumbs.db
+
+# Editor
+.vscode/settings.local.json
+.idea/
+*.swp
+
+# Claude local state
+.claude/memory/
